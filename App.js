@@ -17,5 +17,5 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 export default function App() {
-  return <CreateBillScreen />;
+  return <MyNavigator />;
 }
