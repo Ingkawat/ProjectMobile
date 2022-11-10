@@ -133,22 +133,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-
-  roundbtn: {
-    width: 50,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 100,
-    backgroundColor: "#FCC046",
-    marginLeft: 30,
-    marginTop: 20,
-  },
-
-  roundbtntext: {
-    fontSize: 26,
-    fontWeight: "bold",
-  },
 });
 
 export default PayScreen;
