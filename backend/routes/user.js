@@ -1,36 +1,78 @@
 const express = require("express");
 const User = require("../models/user");
 router = express.Router();
+const multer = require("multer");
 
-router.post("/signup", async (req, res) => {
-  const findExistsName = User.find({ user_name: { $eq: req.body.user_name } });
-  const findExistsEmail = User.find({ email: { $eq: req.body.email } });
-  const findName = await findExistsName.exec();
-  if (findName.length > 0) {
-    res.send("username has exists");
-    return;
-  }
-  const findEmail = await findExistsEmail.exec();
-  if (findEmail.length > 0) {
-    res.send("email has exists");
-    return;
-  }
 
+
+router.post("/user/:userName", async (req, res) => {
+  const user_name = req.params;
+
+  const user = await User.findOne({ user_name });
+
+  res.send(user);
+});
+
+const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        console.log('in multerdestination')
+        callback(null, "./uploads");
+    },
+    filename: function (req, file, callback) {
+        console.log('in filename')
+        console.log(file)
+        callback(
+            null, Date.now() + ".jpg"
+            
+        );
+    },
+});
+const upload = multer({
+    storage: storage
+});
+  
+router.post("/signup",upload.single("images"), async (req, res) => {
   const user_name = req.body.user_name;
   const password = req.body.password;
   const name = req.body.name;
   const email = req.body.email;
   const phone = req.body.phone;
-  const user = new User({ user_name, password, name, email, phone });
-  await user.save();
+  console.log(password)
+  try {
+    const user = await User.find({ user_name: user_name });
+    const e = await User.find({email: email});
+    console.log(email)
+    console.log(e)
+    if(user.length != 0){
+        res.send("Username is no unique")
+    }else if(e.length != 0){
+        res.send("Email is no unique")
+    }
+    else {
+        if(req.file == undefined){
+            const user = new User({ user_name, password, name, email, phone });
+            await user.save();
+          }else{
+             let image = req.file.path.substr(8);
+             const user = new User({ user_name, password, name, email, phone, image });
+             await user.save();
+          }
+          res.json("register is success");
+    }
 
-  res.send("You made a post request");
+    
+  } catch (error) {
+    console.log(error)
+
+    
+  }
 });
 
 router.post("/login", async (req, res) => {
-  const username = req.body.user_name;
+  const user_name = req.body.user_name;
   const password = req.body.password;
-  const user = await User.find({ user_name: username });
+  const user = await User.find({ user_name });
+  console.log(user)
 
   if (user[0] != undefined) {
     if (user[0].password == password) {
