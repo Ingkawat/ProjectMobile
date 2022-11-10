@@ -6,7 +6,7 @@ import { Card, Avatar} from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons'; 
 
 
-const App = () => {
+const Cards = () => {
   return (
       <View style={styles.container}>
         <View style={{flexDirection: 'row'}}>
@@ -58,7 +58,7 @@ const App = () => {
   );
 };
 
-export default App;
+export default Cards;
 
 const styles = StyleSheet.create({
   container: {
