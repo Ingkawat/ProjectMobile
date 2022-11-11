@@ -6,6 +6,8 @@ import { Card, Avatar } from "react-native-paper";
 
 const ManageCard = () => {
   const [isPayAlready, setisPayAlready] = useState(false);
+  const [seeMoney, setseemoney] = useState('Money');
+  
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row" }}>
@@ -17,9 +19,9 @@ const ManageCard = () => {
             <Text style={styles.txt}>Name</Text>
           </Card>
         </View>
-        <View style={{ justifyContent: "center", backgroundColor: "#FFF8EF" }}>
+        <View  style={{ justifyContent: "center", backgroundColor: "#FFF8EF"}}>
           <Card style={{backgroundColor: "#FFF8EF"}}>
-            <Text style={styles.txt2}>Money</Text>
+              <Text  style={styles.txt2}>{seeMoney}</Text>
           </Card>
         </View>
       </View>
@@ -39,6 +41,7 @@ const ManageCard = () => {
             style={styles.btn2}
             onPress={() => {
               setisPayAlready(true);
+              setseemoney('');
             }}
           >
             <Text
@@ -82,6 +85,7 @@ const styles = StyleSheet.create({
     color: "black",
     marginLeft: 140,
     marginTop: 10,
+
   },
   btn: {
     alignSelf: "center",
