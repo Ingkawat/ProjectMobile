@@ -10,11 +10,11 @@ const Cards = () => {
   return (
       <View style={styles.container}>
         <View style={{flexDirection: 'row'}}>
-            <Card>
+            <Card style={{backgroundColor: "#FFF8EF"}}>
                 <TextInput returnKeyType='done' autoCorrect={false} style={styles.textinput} placeholder="List name" />
             </Card>
             <View style={{justifyContent: 'center'}}>
-                <Card>
+                <Card style={{backgroundColor: "#FFF8EF"}}>
                     <TextInput returnKeyType='done' autoCorrect={false} style={styles.textinput2} placeholder="Money" />
                 </Card>
             </View>
