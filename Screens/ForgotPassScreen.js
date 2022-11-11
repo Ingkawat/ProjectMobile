@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 
   txtInput: {
     height: 25,
-    width: "100%",
+    width: "60%",
     marginTop: 10,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
