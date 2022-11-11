@@ -29,11 +29,20 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   const Check_onsubmit = () => {
-    if (state1.errorUsername != "" && state1.errorPassword == "") {
+    if (
+      state1.errorUsername != undefined &&
+      state1.errorPassword == undefined
+    ) {
       Alert.alert("Username requirement is invalid.");
-    } else if (state1.errorPassword != "" && state1.errorUsername == "") {
+    } else if (
+      state1.errorPassword != undefined &&
+      state1.errorUsername == undefined
+    ) {
       Alert.alert("Password requirement is invalid.");
-    } else if (state1.errorUsername == "=" && state1.errorPassword == "") {
+    } else if (
+      state1.errorUsername == "=" &&
+      state1.errorPassword == undefined
+    ) {
       Alert.alert("Username and Password requirement is invalid.");
     } else {
       login({ user_name, password });
@@ -98,7 +107,7 @@ const LoginScreen = ({ navigation }) => {
           <Text style={{ color: "red", left: 25 }}>{state1.errorPassword}</Text>
         </Animatable.View>
       ) : null}
-      
+
       {state.errorMessage ? (
         <Animatable.View
           animation="fadeInLeft"
@@ -160,7 +169,7 @@ const styles = StyleSheet.create({
 
   txtInput: {
     height: 25,
-    width: "100%",
+    width: "60%",
     marginTop: 10,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
