@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Avatar } from "react-native-paper";
-import SelectList from "react-native-dropdown-select-list";
+import { SelectList } from "react-native-dropdown-select-list";
 import { FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 
@@ -30,7 +30,7 @@ function PayScreen({ navigation }) {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setImage(result.uri);
     }
   };
@@ -54,6 +54,7 @@ function PayScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       <Text style={{textAlign:'center', fontSize:18, marginTop:10}}>or</Text>
+
       <SelectList
         setSelected={setSelected}
         data={data}
