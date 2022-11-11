@@ -1,22 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image
-} from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 
 import { Card, Avatar } from "react-native-paper";
-import paidready from '../assets/paidalready.png'
-
-
-const changeImage = () => {
-    <Image source={paidready}></Image>
-}
 
 const ManageCard = () => {
+  const [isPayAlready, setisPayAlready] = useState(false);
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row" }}>
@@ -36,11 +25,33 @@ const ManageCard = () => {
       </View>
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity style={styles.btn}>
-          <Text style={{textAlign: 'center', fontWeight:'bold'}}>Proof of payment</Text>
+          <Text style={{ textAlign: "center", fontWeight: "bold" }}>
+            Proof of payment
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn2}>
-          <Text style={{textAlign: 'center', color:'#77CEC6', fontWeight:'bold'}}>Complete</Text>
-        </TouchableOpacity>
+        {isPayAlready ? (
+          <Image
+            source={require("../assets/paidalready.png")}
+            style={{ width: 50, height: 50, marginLeft: 80, marginTop: 20 }}
+          ></Image>
+        ) : (
+          <TouchableOpacity
+            style={styles.btn2}
+            onPress={() => {
+              setisPayAlready(true);
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#77CEC6",
+                fontWeight: "bold",
+              }}
+            >
+              Complete
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -78,17 +89,17 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#FCC046",
     borderRadius: 4,
-    marginLeft:20,
-    marginTop:25,
+    marginLeft: 20,
+    marginTop: 25,
   },
   btn2: {
     alignSelf: "center",
     width: 100,
     padding: 10,
-    borderColor: '#77CEC6',
-    borderWidth:2,
+    borderColor: "#77CEC6",
+    borderWidth: 2,
     borderRadius: 4,
-    marginLeft:50,
-    marginTop:25,
+    marginLeft: 50,
+    marginTop: 25,
   },
 });
