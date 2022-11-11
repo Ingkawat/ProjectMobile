@@ -12,13 +12,13 @@ const ManageCard = () => {
         <TouchableOpacity style={{ marginTop: 10, marginLeft: 20 }}>
           <Avatar.Image size={50} backgroundColor="#F06B6D" />
         </TouchableOpacity>
-        <View style={{ justifyContent: "center", backgroundColor: "#FFF8EF" }}>
-          <Card>
+        <View style={{ justifyContent: "center", zIndex:1}}>
+          <Card style={{backgroundColor: "#FFF8EF"}}>
             <Text style={styles.txt}>Name</Text>
           </Card>
         </View>
         <View style={{ justifyContent: "center", backgroundColor: "#FFF8EF" }}>
-          <Card>
+          <Card style={{backgroundColor: "#FFF8EF"}}>
             <Text style={styles.txt2}>Money</Text>
           </Card>
         </View>
