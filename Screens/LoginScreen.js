@@ -73,7 +73,7 @@ const LoginScreen = ({ navigation }) => {
       </View>
       {state1.errorUsername ? (
         <Animatable.View animation="fadeInLeft" duration={500}>
-          <Text style={{ color: "red" }}>{state1.errorUsername}</Text>
+          <Text style={{ color: "red", marginTop: -40 }}>{state1.errorUsername}</Text>
         </Animatable.View>
       ) : null}
 
@@ -96,9 +96,9 @@ const LoginScreen = ({ navigation }) => {
         <Animatable.View
           animation="fadeInLeft"
           duration={500}
-          style={{ flexWrap: "nowrap", marginLeft: "5%", marginRight: "2%" }}
+          style={{ flexWrap: "nowrap"}}
         >
-          <Text style={{ color: "red", left: 25 }}>{state1.errorPassword}</Text>
+          <Text style={{ color: "red"}}>{state1.errorPassword}</Text>
         </Animatable.View>
       ) : null}
       
