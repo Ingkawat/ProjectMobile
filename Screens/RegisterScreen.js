@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  ScollView,
+  SafeAreaView
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import * as ImagePicker from "expo-image-picker";
@@ -14,7 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Context as AuthContext } from "../context/AuthContext";
 import { Context as ValidationContext } from "../context/ValidationContext";
 
-const RegisterScreen = () => {
+const RegisterScreen = ({ navigation }) => {
   const { state, register } = useContext(AuthContext);
   const [user_name, setUser_name] = useState();
   const [name, setName] = useState("");
@@ -38,10 +40,8 @@ const RegisterScreen = () => {
       aspect: [4, 3],
       quality: 1,
     });
-    
-   
+
     setImage(result.assets[0].uri);
-    
   };
 
   let state1 = useContext(ValidationContext).state;
@@ -49,7 +49,6 @@ const RegisterScreen = () => {
   const [conpass, setConpass] = useState("");
 
   const onSubmit_Register = () => {
-    
     if (password != confirmpassword) {
       setConpass("password not match");
     } else if (
@@ -58,145 +57,172 @@ const RegisterScreen = () => {
       state1.errorPassword === "" &&
       state1.errorPhonenumber === ""
     ) {
-      if(user_name != '' && name != '' && password != '' && email != '' && phone != ''){
+      if (
+        user_name != "" &&
+        name != "" &&
+        password != "" &&
+        email != "" &&
+        phone != ""
+      ) {
         register({ user_name, name, password, phone, email, image });
         ButtonAlert();
-      } else{
-        console.log("not pass")
+      } else {
+        console.log("not pass");
       }
-      
-      
     } else {
       console.log("password not match");
     }
   };
 
   const ButtonAlert = () =>
-    Alert.alert(
-      "Alert Title",
-      "Register is successful",
-      [
-        { text: "Go back to login", onPress: () => { navigation.navigate("Login")} }
-      ]
-    );
-
+    Alert.alert("Register is successful", [
+      {
+        text: "Go back to login",
+        onPress: () => {
+          navigation.navigate("Login");
+        },
+      },
+    ]);
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.circle}>
+    <SafeAreaView style={styles.screen}>
+      
         <TouchableOpacity onPress={() => addimage()}>
-          <Image
-            source={require("../assets/add_picture.png")}
-            style={styles.imgAdd}
-          ></Image>
+          {image == null ? (
+            <View style={{marginTop: 20}}>
+              <View style={styles.circle}>
+                <Image
+                  source={require("../assets/add_picture.png")}
+                  style={styles.imgAdd1}
+                ></Image>
+              </View>
+              <Text
+                style={{
+                  color: "#F06B6D",
+                  fontWeight: "bold",
+                  marginTop: 10,
+                  textAlign: "center",
+                }}
+              >
+                Add Photo
+              </Text>
+            </View>
+          ) : (
+            <Image source={{ uri: image }} style={styles.imgAdd2}></Image>
+          )}
         </TouchableOpacity>
-      </View>
-      <Text style={{ color: "#F06B6D", fontWeight: "bold", marginTop: 10 }}>
-        Add Photo
-      </Text>
-      <TextInput
-        style={styles.txtInput}
-        placeholder="Enter Your Name"
-        value={name}
-        onChangeText={(value) => {
-          setName(value), validate_Name(value);
-        }}
-      ></TextInput>
-      {state1.errorName ? (
-        <Animatable.View animation="fadeInLeft" duration={500}>
-          <Text style={{ color: "red" }}>{state1.errorName}</Text>
-        </Animatable.View>
-      ) : null}
-      <TextInput
-        style={styles.txtInput}
-        placeholder="Enter User Name"
-        value={user_name}
-        onChangeText={(value) => {
-          setUser_name(value), validate_Username(value);
-        }}
-      ></TextInput>
-      {state1.errorUsername ? (
-        <Animatable.View animation="fadeInLeft" duration={500}>
-          <Text style={{ color: "red" }}>{state1.errorUsername}</Text>
-        </Animatable.View>
-      ) : null}
-      <TextInput
-        style={styles.txtInput}
-        placeholder="Enter Password"
-        value={password}
-        onChangeText={(value) => {
-          setPassword(value), validate_Password(value);
-        }}
-      ></TextInput>
-      {state1.errorPassword ? (
-        <Animatable.View
-          animation="fadeInLeft"
-          duration={500}
-          style={{ flexWrap: "nowrap", marginLeft: "5%", marginRight: "2%" }}
-        >
-          <Text style={{ color: "red", left: 25 }}>{state1.errorPassword}</Text>
-        </Animatable.View>
-      ) : null}
-      <TextInput
-        style={styles.txtInput}
-        placeholder="Confirm Password"
-        value={confirmpassword}
-        onChangeText={(value) => {
-          setConfirmpassword(value);
-        }}
-      ></TextInput>
-      {conpass ? (
-        <Animatable.View animation="fadeInLeft" duration={500}>
-          <Text style={{ color: "red" }}>{conpass}</Text>
-        </Animatable.View>
-        
-      ) : null}
-      <TextInput
-        style={styles.txtInput}
-        placeholder="Enter Email"
-        value={email}
-        onChangeText={(value) => {
-          setEmail(value), validate_Email(value);
-        }}
-      ></TextInput>
-      {state1.errorEmail ? (
-        <Animatable.View animation="fadeInLeft" duration={500}>
-          <Text style={{ color: "red" }}>{state1.errorEmail}</Text>
-        </Animatable.View>
-      ) : null}
-      <TextInput
-        style={styles.txtInput}
-        placeholder="Enter Phonenumber"
-        value = {phone} onChangeText={(value) => {setPhone(value), validate_Phonenumber(value)}}
-      ></TextInput>
-      {state1.errorPhonenumber ?
-          <Animatable.View animation="fadeInLeft" duration={500}>
-           <Text style={{color:"red"}}>{state1.errorPhonenumber}</Text>
-          </Animatable.View> :null }
-      <TouchableOpacity style={styles.btn} onPress={()=> onSubmit_Register()}>
-        <Text style={{ color: "#FFF8EF", fontWeight: "bold" }}>
-          Create Account
-        </Text>
-      </TouchableOpacity>
-      {state.Message == 'register is success' ? (
-        <Animatable.View
-          animation="fadeInLeft"
-          duration={500}
-          style={{ flexWrap: "nowrap" }}
-        >
-          <Text style={{ color: "green" }}>{state.Message}</Text>
-        </Animatable.View>
-      ) :(
-        <Animatable.View
-          animation="fadeInLeft"
-          duration={500}
-          style={{ flexWrap: "nowrap" }}
-        >
-          <Text style={{ color: "red" }}>{state.Message}</Text>
-        </Animatable.View>
-      )}
 
-    </View>
+        <TextInput
+          style={styles.txtInput}
+          placeholder="Enter Your Name"
+          value={name}
+          onChangeText={(value) => {
+            setName(value), validate_Name(value);
+          }}
+        ></TextInput>
+        {state1.errorName ? (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={{ color: "red" }}>{state1.errorName}</Text>
+          </Animatable.View>
+        ) : null}
+        <TextInput
+          style={styles.txtInput}
+          placeholder="Enter User Name"
+          value={user_name}
+          onChangeText={(value) => {
+            setUser_name(value), validate_Username(value);
+          }}
+        ></TextInput>
+        {state1.errorUsername ? (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={{ color: "red" }}>{state1.errorUsername}</Text>
+          </Animatable.View>
+        ) : null}
+        <TextInput
+          style={styles.txtInput}
+          placeholder="Enter Password"
+          value={password}
+          onChangeText={(value) => {
+            setPassword(value), validate_Password(value);
+          }}
+        ></TextInput>
+        {state1.errorPassword ? (
+          <Animatable.View
+            animation="fadeInLeft"
+            duration={500}
+            style={{ flexWrap: "nowrap", marginLeft: "5%", marginRight: "2%" }}
+          >
+            <Text style={{ color: "red", left: 25 }}>
+              {state1.errorPassword}
+            </Text>
+          </Animatable.View>
+        ) : null}
+        <TextInput
+          style={styles.txtInput}
+          placeholder="Confirm Password"
+          value={confirmpassword}
+          onChangeText={(value) => {
+            setConfirmpassword(value);
+          }}
+        ></TextInput>
+        {conpass ? (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={{ color: "red" }}>{conpass}</Text>
+          </Animatable.View>
+        ) : null}
+        <TextInput
+          style={styles.txtInput}
+          placeholder="Enter Email"
+          value={email}
+          onChangeText={(value) => {
+            setEmail(value), validate_Email(value);
+          }}
+        ></TextInput>
+        {state1.errorEmail ? (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={{ color: "red" }}>{state1.errorEmail}</Text>
+          </Animatable.View>
+        ) : null}
+        <TextInput
+          style={styles.txtInput}
+          placeholder="Enter Phonenumber"
+          value={phone}
+          onChangeText={(value) => {
+            setPhone(value), validate_Phonenumber(value);
+          }}
+        ></TextInput>
+        {state1.errorPhonenumber ? (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={{ color: "red" }}>{state1.errorPhonenumber}</Text>
+          </Animatable.View>
+        ) : null}
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => onSubmit_Register()}
+        >
+          <Text style={{ color: "#FFF8EF", fontWeight: "bold" }}>
+            Create Account
+          </Text>
+        </TouchableOpacity>
+        {state.Message == "register is success" ? (
+          <Animatable.View
+            animation="fadeInLeft"
+            duration={500}
+            style={{ flexWrap: "nowrap" }}
+          >
+            <Text style={{ color: "green" }}>{state.Message}</Text>
+          </Animatable.View>
+        ) : (
+          <Animatable.View
+            animation="fadeInLeft"
+            duration={500}
+            style={{ flexWrap: "nowrap" }}
+          >
+            <Text style={{ color: "red" }}>{state.Message}</Text>
+          </Animatable.View>
+        )}
+      
+    </SafeAreaView>
   );
 };
 
@@ -214,10 +240,17 @@ const styles = StyleSheet.create({
     padding: 30,
   },
 
-  imgAdd: {
-    width: 130,
-    height: 130,
-    marginLeft: -5,
+  imgAdd1: {
+    width: 120,
+    height: 120,
+    borderRadius: 100,
+    marginLeft: -5
+  },
+
+  imgAdd2: {
+    width: 180,
+    height: 180,
+    borderRadius: 100,
   },
 
   txtInput: {
