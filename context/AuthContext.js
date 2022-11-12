@@ -2,6 +2,7 @@ import createDataContext from "./createDataContext";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
+import Constants from 'expo-constants';
 
 const authReducer = (state, action) => {
   switch (action.type) {
@@ -23,9 +24,10 @@ const clearLocal = (dispatch) => async () => {
 
 const tryLocalSignin = (dispatch) => async () => {
   const token = await AsyncStorage.getItem("username");
+  console.log(token)
   if (token) {
     axios
-      .post(`http://localhost:3000/user/${token}`)
+      .post(`http://${Constants.expoConfig.extra.apiUrl}:3000/user/${token}`)
       .then(async (res) => {
         dispatch({ type: "signin", payload: token });
       })
@@ -38,7 +40,7 @@ const tryLocalSignin = (dispatch) => async () => {
 const login = (dispatch) => {
   return ({ user_name, password }) => {
     axios
-      .post(`http://localhost:3000/login`, {
+      .post(`http://${Constants.expoConfig.extra.apiUrl}:3000/login`, {
         user_name: user_name,
         password: password,
       })
@@ -47,7 +49,6 @@ const login = (dispatch) => {
         if(res.data == "Login success"){
         console.log("login is success")
         await AsyncStorage.setItem("username", user_name);
-        console.log(AsyncStorage.getItem("username"))
         dispatch({ type: "signin", payload: user_name });
         }else{
           dispatch({ type: "signin", error: res.data });
@@ -98,10 +99,10 @@ const register = (dispatch) => {
     data.append("name", name)
     data.append("email", email)
     data.append("phone", phone)
-    console.log(password)
+    
       axios
       //use your ip address type in cmd ipconfig***
-      .post(`http://localhost:3000/signup`,data, {headers:{'Content-Type': "multipart/form-data"}} 
+      .post(`http://${Constants.expoConfig.extra.apiUrl}:3000/signup`,data, {headers:{'Content-Type': "multipart/form-data"}} 
       )
       .then( async (res) => {
          dispatch({type: 'register', error: res.data})
@@ -109,7 +110,7 @@ const register = (dispatch) => {
       })
       .catch((err) => {
         dispatch({ type: 'add_error', payload: 'Register Error' })
-        console.log("error")
+        console.log(err)
       });
   }
 }
