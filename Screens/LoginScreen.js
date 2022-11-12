@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import {
   Image,
   StyleSheet,
@@ -17,7 +17,10 @@ import Constants from 'expo-constants';
 import { Context as AuthContext } from "../context/AuthContext";
 import { Context as ValidationContext } from "../context/ValidationContext";
 
+
 const LoginScreen = ({ navigation }) => {
+  const ref_input2 = useRef();
+
   const { state, login, tryLocalSignin } = useContext(AuthContext);
 
   const { validate_Username, validate_Password } =
@@ -64,6 +67,8 @@ const LoginScreen = ({ navigation }) => {
         <TextInput
           style={styles.txtInput}
           placeholder="Username"
+          returnKeyType="next"
+          onSubmitEditing={() => ref_input2.current.focus()}
           keyboardType="default"
           value={user_name}
           onChangeText={(value) => {
@@ -73,7 +78,7 @@ const LoginScreen = ({ navigation }) => {
       </View>
       {state1.errorUsername ? (
         <Animatable.View animation="fadeInLeft" duration={500}>
-          <Text style={{ color: "red", marginTop: -40 }}>{state1.errorUsername}</Text>
+          <Text style={{ color: "red" }}>{state1.errorUsername}</Text>
         </Animatable.View>
       ) : null}
 
@@ -85,7 +90,9 @@ const LoginScreen = ({ navigation }) => {
         <TextInput
           style={styles.txtInput}
           placeholder="Password"
+          ref={ref_input2}
           keyboardType="default"
+          secureTextEntry={true}
           value={password}
           onChangeText={(value) => {
             setPassword(value), validate_Password(value);
@@ -96,9 +103,9 @@ const LoginScreen = ({ navigation }) => {
         <Animatable.View
           animation="fadeInLeft"
           duration={500}
-          style={{ flexWrap: "nowrap"}}
+          style={{ flexWrap: "nowrap", marginLeft: "5%", marginRight: "2%" }}
         >
-          <Text style={{ color: "red"}}>{state1.errorPassword}</Text>
+          <Text style={{ color: "red", left: 25 }}>{state1.errorPassword}</Text>
         </Animatable.View>
       ) : null}
       
