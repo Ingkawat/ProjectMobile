@@ -67,7 +67,7 @@ const RegisterScreen = ({ navigation }) => {
         register({ user_name, name, password, phone, email, image });
         ButtonAlert();
       } else {
-        console.log("not pass");
+        ButtonAlert2();
       }
     } else {
       console.log("password not match");
@@ -75,12 +75,19 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const ButtonAlert = () =>
-    Alert.alert("Register is successful", [
+    Alert.alert("Alert", "Register is successful", [
       {
         text: "Go back to login",
         onPress: () => {
           navigation.navigate("Login");
         },
+      },
+    ]);
+
+    const ButtonAlert2 = () =>
+    Alert.alert("Alert", "Please complete the information.", [
+      {
+        text: "OK",
       },
     ]);
 
