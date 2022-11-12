@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import {
   Image,
   StyleSheet,
@@ -17,6 +17,12 @@ import { Context as AuthContext } from "../context/AuthContext";
 import { Context as ValidationContext } from "../context/ValidationContext";
 
 const RegisterScreen = ({ navigation }) => {
+  const ref_input2 = useRef();
+  const ref_input3 = useRef();
+  const ref_input4 = useRef();
+  const ref_input5 = useRef();
+  const ref_input6 = useRef();
+
   const { state, register } = useContext(AuthContext);
   const [user_name, setUser_name] = useState();
   const [name, setName] = useState("");
@@ -125,6 +131,8 @@ const RegisterScreen = ({ navigation }) => {
       <TextInput
         style={styles.txtInput}
         placeholder="Enter Your Name"
+        returnKeyType="next"
+        onSubmitEditing={() => ref_input2.current.focus()}
         value={name}
         onChangeText={(value) => {
           setName(value), validate_Name(value);
@@ -138,7 +146,10 @@ const RegisterScreen = ({ navigation }) => {
       <TextInput
         style={styles.txtInput}
         placeholder="Enter User Name"
+        returnKeyType="next"
+        onSubmitEditing={() => ref_input3.current.focus()}
         value={user_name}
+        ref={ref_input2}
         onChangeText={(value) => {
           setUser_name(value), validate_Username(value);
         }}
@@ -152,6 +163,10 @@ const RegisterScreen = ({ navigation }) => {
         style={styles.txtInput}
         placeholder="Enter Password"
         value={password}
+        returnKeyType="next"
+        secureTextEntry={true}
+        onSubmitEditing={() => ref_input4.current.focus()}
+        ref={ref_input3}
         onChangeText={(value) => {
           setPassword(value), validate_Password(value);
         }}
@@ -168,7 +183,11 @@ const RegisterScreen = ({ navigation }) => {
       <TextInput
         style={styles.txtInput}
         placeholder="Confirm Password"
+        onSubmitEditing={() => ref_input5.current.focus()}
+        ref={ref_input4}
+        returnKeyType="next"
         value={confirmpassword}
+        secureTextEntry={true}
         onChangeText={(value) => {
           setConfirmpassword(value);
         }}
@@ -181,7 +200,11 @@ const RegisterScreen = ({ navigation }) => {
       <TextInput
         style={styles.txtInput}
         placeholder="Enter Email"
+        onSubmitEditing={() => ref_input6.current.focus()}
+        ref={ref_input5}
+        returnKeyType="next"
         value={email}
+        keyboardType={'email-address'}
         onChangeText={(value) => {
           setEmail(value), validate_Email(value);
         }}
@@ -195,6 +218,9 @@ const RegisterScreen = ({ navigation }) => {
         style={styles.txtInput}
         placeholder="Enter Phonenumber"
         value={phone}
+        ref={ref_input6}
+        keyboardType={"numeric"}
+        maxLength={10}
         onChangeText={(value) => {
           setPhone(value), validate_Phonenumber(value);
         }}
