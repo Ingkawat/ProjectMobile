@@ -5,10 +5,10 @@ const multer = require("multer");
 
 
 
-router.post("/user/:userName", async (req, res) => {
-  const user_name = req.params;
+router.post("/user/:user_name", async (req, res) => {
+  const user_name = req.params.user_name;
 
-  const user = await User.findOne({ user_name });
+  const user = await User.findOne({ user_name : user_name });
 
   res.send(user);
 });
