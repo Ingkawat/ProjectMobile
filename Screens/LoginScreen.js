@@ -7,8 +7,12 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  SafeAreaView
 } from "react-native";
 import * as Animatable from "react-native-animatable";
+import Constants from 'expo-constants';
+
+
 
 import { Context as AuthContext } from "../context/AuthContext";
 import { Context as ValidationContext } from "../context/ValidationContext";
@@ -29,29 +33,19 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   const Check_onsubmit = () => {
-    if (
-      state1.errorUsername != undefined &&
-      state1.errorPassword == undefined
-    ) {
+    if (state1.errorUsername != "" && state1.errorPassword == "") {
       Alert.alert("Username requirement is invalid.");
-    } else if (
-      state1.errorPassword != undefined &&
-      state1.errorUsername == undefined
-    ) {
+    } else if (state1.errorPassword != "" && state1.errorUsername == "") {
       Alert.alert("Password requirement is invalid.");
-    } else if (
-      state1.errorUsername == "=" &&
-      state1.errorPassword == undefined
-    ) {
+    } else if (state1.errorUsername == "=" && state1.errorPassword == "") {
       Alert.alert("Username and Password requirement is invalid.");
     } else {
       login({ user_name, password });
-      navigation.navigate("CreateBill");
     }
   };
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       <Text
         style={{
           fontSize: 50,
@@ -83,7 +77,7 @@ const LoginScreen = ({ navigation }) => {
         </Animatable.View>
       ) : null}
 
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row"}}>
         <Image
           source={require("../assets/password_icon.png")}
           style={styles.icon}
@@ -107,7 +101,7 @@ const LoginScreen = ({ navigation }) => {
           <Text style={{ color: "red", left: 25 }}>{state1.errorPassword}</Text>
         </Animatable.View>
       ) : null}
-
+      
       {state.errorMessage ? (
         <Animatable.View
           animation="fadeInLeft"
@@ -148,7 +142,7 @@ const LoginScreen = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </Text>
-    </View>
+    </SafeAreaView>
   );
 };
 
