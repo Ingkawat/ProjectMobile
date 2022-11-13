@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Image,
   StyleSheet,
@@ -6,33 +6,41 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Button,
 } from "react-native";
 
-const CreateBill = () => {
+const CreateBill = ({ navigation }) => {
   return (
     <View style={styles.screen}>
       <Text style={styles.createText}>สร้างบิล</Text>
       <View style={styles.rect}>
         <Image
-          source={require("../assets/favicon.png")}
-          style={{ width: 50, height: 50, marginLeft: 20 }}
+          source={require("../assets/equal_divide.png")}
+          style={{ width: 70, height: 70, marginLeft: 20 }}
         ></Image>
         <Text style={styles.textInRect}>หารเท่ากัน</Text>
-        <Image
-          source={require("../assets/right_arrow.png")}
-          style={{ width: 40, height: 40 }}
-        ></Image>
+        <TouchableOpacity onPress={() => navigation.navigate("EqualDiv")}>
+          <Image
+            source={require("../assets/right_arrow_createbill.png")}
+            style={{ width: 50, height: 50, marginLeft: "22%" }}
+          ></Image>
+        </TouchableOpacity>
       </View>
       <View style={[styles.rect]}>
         <Image
-          source={require("../assets/favicon.png")}
-          style={{ width: 50, height: 50, marginLeft: 20 }}
+          source={require("../assets/notequal_divide.png")}
+          style={{ width: 70, height: 70, marginLeft: 20 }}
         ></Image>
         <Text style={[styles.textInRect]}>หารไม่เท่ากัน</Text>
-        <Image
-          source={require("../assets/right_arrow.png")}
-          style={{ width: 40, height: 40, marginLeft: -25 }}
-        ></Image>
+        <TouchableOpacity
+          style={{ width: 0 }}
+          onPress={() => navigation.navigate("UnEqualDiv")}
+        >
+          <Image
+            source={require("../assets/right_arrow_createbill.png")}
+            style={{ width: 50, height: 50 }}
+          ></Image>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -70,7 +78,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     paddingLeft: 20,
-    marginRight: "25%",
+    marginRight: "10%",
     color: "#525EBC",
   },
 });
