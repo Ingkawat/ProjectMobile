@@ -26,6 +26,8 @@ import ManageBillScreen from "../screens/ManageBillScreen";
 import PayScreen from "../screens/PayScreen";
 import BillNotPayScreen from "../screens/BillNotPayScreen";
 import BillPayAlreadyScreen from "../screens/BillPayAlreadyScreen";
+import ContactScreen from "../screens/ContactScreen";
+import { io } from "socket.io-client";
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -33,13 +35,17 @@ const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
   const { state, clearLocal } = useContext(AuthContext);
+  const socket = io("http://192.168.1.12:3000", { transports: ["websocket"] });
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
       <DrawerItem
         label="Logout"
         labelStyle={{ color: "#fff" }}
-        onPress={() => clearLocal()}
+        onPress={() => {
+          clearLocal();
+          socket.emit("disconnectAccount");
+        }}
       />
     </DrawerContentScrollView>
   );
@@ -235,6 +241,12 @@ function HomeNavigator() {
         name="BillUser"
         component={UserTabNavigator}
         options={{ drawerLabel: "BillUser" }}
+      ></Drawer.Screen>
+      <Drawer.Screen
+        name="Contact"
+        // component={() => <ContactScreen nameuser={state.username} />}
+        component={ContactScreen}
+        options={{ drawerLabel: "Contact" }}
       ></Drawer.Screen>
     </Drawer.Navigator>
   );
