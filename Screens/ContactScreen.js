@@ -19,11 +19,21 @@ const ContactScreen = () => {
   const { state } = useContext(AuthContext);
   const [nameUser, setNameUser] = useState("");
   const [friendNameForAdd, setfriendNameForAdd] = useState("");
-  const [seeFriendRequest, setseeFriendRequest] = useState(null);
   const [friendNameForAccept, setfriendNameForAccept] = useState("");
   const [allFriend, setallFriend] = useState(null);
 
   useEffect(() => {
+    axios
+      .get(
+        `http://${Constants.expoConfig.extra.apiUrl}:3000/getFriend/${state.username}`
+      )
+      .then(async (res) => {
+        // console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     axios
       .post(
         `http://${Constants.expoConfig.extra.apiUrl}:3000/user/${state.username}`
@@ -31,10 +41,6 @@ const ContactScreen = () => {
       .then(async (res) => {
         const Friend = res.data.friends;
         setNameUser(res.data.name);
-        const findRequestFriend = Friend.filter(
-          ({ status }) => status === "Pending"
-        );
-        setseeFriendRequest(findRequestFriend);
         setallFriend(Friend);
       })
       .catch((err) => {
@@ -58,8 +64,6 @@ const ContactScreen = () => {
 
   const accpetFriend = (prop) => {
     setfriendNameForAccept(prop);
-    console.log(prop);
-    console.log(friendNameForAccept);
     axios
       .post(
         `http://${Constants.expoConfig.extra.apiUrl}:3000/acceptFriendRequest/${friendNameForAccept}/${nameUser}`
@@ -97,7 +101,6 @@ const ContactScreen = () => {
       <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: "5%" }}>
         Contact
       </Text>
-      <FlatList data={seeFriendRequest} renderItem={renderFriendRequest} />
       <FlatList data={allFriend} renderItem={renderFriendRequest} />
     </View>
   );
