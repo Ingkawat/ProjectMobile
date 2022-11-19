@@ -20,6 +20,7 @@ const ContactScreen = () => {
   const [nameUser, setNameUser] = useState("");
   const [friendNameForAdd, setfriendNameForAdd] = useState("");
   const [friendNameForAccept, setfriendNameForAccept] = useState("");
+  const [friendNameForUnFriend, setfriendNameForUnFriend] = useState("");
   const [allFriend, setallFriend] = useState(null);
 
   useEffect(() => {
@@ -63,10 +64,24 @@ const ContactScreen = () => {
   };
 
   const accpetFriend = (prop) => {
-    setfriendNameForAccept(prop);
+    setfriendNameForUnFriend(prop);
     axios
       .post(
-        `http://${Constants.expoConfig.extra.apiUrl}:3000/acceptFriendRequest/${friendNameForAccept}/${nameUser}`
+        `http://${Constants.expoConfig.extra.apiUrl}:3000/acceptFriendRequest/${nameUser}/${friendNameForUnFriend}`
+      )
+      .then(async (res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const unFriend = (prop) => {
+    setfriendNameForAccept(prop);
+    axios
+      .delete(
+        `http://${Constants.expoConfig.extra.apiUrl}:3000/unFriend/${nameUser}/${friendNameForAccept}`
       )
       .then(async (res) => {
         console.log(res.data);
@@ -81,7 +96,9 @@ const ContactScreen = () => {
       <FriendList
         name={itemData.item.name}
         status={itemData.item.status}
+        sentByYourSelf={itemData.item.sentByYourSelf}
         acceptFriendFunc={(prop) => accpetFriend(prop)}
+        unFriendFunc={(prop) => unFriend(prop)}
       />
     );
   };
