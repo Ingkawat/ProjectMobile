@@ -2,13 +2,11 @@ const express = require("express");
 const User = require("../models/user");
 router = express.Router();
 const multer = require("multer");
-const { find } = require("../models/user");
 
 router.post("/user/:user_name", async (req, res) => {
   const user_name = req.params.user_name;
 
   const user = await User.findOne({ user_name: user_name });
-
   res.send(user);
 });
 
@@ -105,6 +103,7 @@ router.post("/sendFriendRequest/:name", async (req, res) => {
                 _id: queryFriendData._id,
                 name: queryFriendData.name,
                 status: "Pending",
+                nameSender: queryMyData.name,
                 sentByYourSelf: true,
               },
             },
@@ -118,6 +117,7 @@ router.post("/sendFriendRequest/:name", async (req, res) => {
                 _id: queryMyData._id,
                 name: queryMyData.name,
                 status: "Pending",
+                nameRecipient: queryFriendData.name,
                 sentByYourSelf: false,
               },
             },
@@ -139,6 +139,23 @@ router.post("/sendFriendRequest/:name", async (req, res) => {
   }
 });
 
+router.get("/getFriend/:user_name", async (req, res) => {
+  const user_name = req.params.user_name;
+  try {
+    const user = await User.updateOne(
+      { user_name: user_name },
+      {
+        $push: {
+          friends: { $each: [], $sort: { status: -1 } },
+        },
+      }
+    );
+    res.json(user);
+  } catch (err) {
+    res.json(err);
+  }
+});
+
 router.post(
   "/acceptFriendRequest/:nameYourSelf/:nameFriend",
   async (req, res) => {
@@ -146,7 +163,12 @@ router.post(
     const nameFriend = req.params.nameFriend;
     try {
       const acceptFriend = await User.updateOne(
-        { "friends.name": nameFriend },
+        {
+          $and: [
+            { "friends.name": nameYourSelf },
+            { "friends.nameSender": nameFriend },
+          ],
+        },
         {
           $set: {
             "friends.$.status": "Accepted",
@@ -155,7 +177,12 @@ router.post(
       );
 
       const acceptFriendTo = await User.updateOne(
-        { "friends.name": nameYourSelf },
+        {
+          $and: [
+            { "friends.name": nameFriend },
+            { "friends.nameRecipient": nameYourSelf },
+          ],
+        },
         {
           $set: {
             "friends.$.status": "Accepted",
@@ -173,8 +200,46 @@ router.post(
   }
 );
 
-router.delete("/unFriend", async (req, res) => {
+router.delete("/unFriend/:nameYourSelf/:nameFriend", async (req, res) => {
+  const nameYourSelf = req.params.nameYourSelf;
+  const nameFriend = req.params.nameFriend;
   try {
+    const acceptFriend = await User.updateOne(
+      {
+        $and: [
+          { "friends.name": nameYourSelf },
+          { "friends.nameSender": nameFriend },
+        ],
+      },
+      {
+        $pull: {
+          friends: {
+            name: nameFriend,
+          },
+        },
+      }
+    );
+
+    const acceptFriendTo = await User.updateOne(
+      {
+        $and: [
+          { "friends.name": nameFriend },
+          { "friends.nameRecipient": nameYourSelf },
+        ],
+      },
+      {
+        $pull: {
+          friends: {
+            name: nameYourSelf,
+          },
+        },
+      }
+    );
+    if (acceptFriend) {
+      res.json({ unFriend: "unFriend Success :(" });
+    } else {
+      res.json({ unFriend: "unFriend Fail :p" });
+    }
   } catch (err) {
     res.json(err);
   }
