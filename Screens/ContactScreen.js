@@ -64,10 +64,10 @@ const ContactScreen = () => {
   };
 
   const accpetFriend = (prop) => {
-    setfriendNameForUnFriend(prop);
+    setfriendNameForAccept(prop);
     axios
       .post(
-        `http://${Constants.expoConfig.extra.apiUrl}:3000/acceptFriendRequest/${nameUser}/${friendNameForUnFriend}`
+        `http://${Constants.expoConfig.extra.apiUrl}:3000/acceptFriendRequest/${nameUser}/${friendNameForAccept}`
       )
       .then(async (res) => {
         console.log(res.data);
@@ -78,10 +78,10 @@ const ContactScreen = () => {
   };
 
   const unFriend = (prop) => {
-    setfriendNameForAccept(prop);
+    setfriendNameForUnFriend(prop);
     axios
       .delete(
-        `http://${Constants.expoConfig.extra.apiUrl}:3000/unFriend/${nameUser}/${friendNameForAccept}`
+        `http://${Constants.expoConfig.extra.apiUrl}:3000/unFriend/${nameUser}/${friendNameForUnFriend}`
       )
       .then(async (res) => {
         console.log(res.data);
