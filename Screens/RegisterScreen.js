@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import {
   Image,
   StyleSheet,
@@ -280,14 +280,6 @@ const RegisterScreen = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.btn2}
-        onPress={() => navigation.navigate("Login")}
-      >
-        <Text style={{ color: "#FFF8EF", fontWeight: "bold" }}>
-          Go back to login
-        </Text>
-      </TouchableOpacity>
     </ScrollView>
     // </View>
   );
@@ -337,13 +329,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  btn2: {
-    backgroundColor: "#77CEC6",
-    paddingHorizontal: 50,
-    paddingVertical: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-  },
 });
 
 export default RegisterScreen;
