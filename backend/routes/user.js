@@ -7,6 +7,7 @@ router.post("/user/:user_name", async (req, res) => {
   const user_name = req.params.user_name;
 
   const user = await User.findOne({ user_name: user_name });
+
   res.send(user);
 });
 
@@ -31,17 +32,20 @@ router.post("/signup", upload.single("images"), async (req, res) => {
   const name = req.body.name;
   const email = req.body.email;
   const phone = req.body.phone;
-  console.log(password);
+
   try {
     const user = await User.find({ user_name: user_name });
-    const e = await User.find({ email: email });
-    console.log(email);
-    console.log(e);
-    if (user.length != 0) {
-      res.send("Username is no unique");
-    } else if (e.length != 0) {
-      res.send("Email is no unique");
-    } else {
+    const e = await User.find({email : email})
+
+    if (user.length != 0 && e.length != 0) {
+      res.send("Duplicate username and email");
+    }
+    else if (e.length != 0) {
+      res.send("Duplicate email");
+    } else if(user.length != 0){
+      res.send("Duplicate username")
+    }
+     else {
       if (req.file == undefined) {
         const user = new User({ user_name, password, name, email, phone });
         await user.save();
@@ -57,7 +61,7 @@ router.post("/signup", upload.single("images"), async (req, res) => {
         });
         await user.save();
       }
-      res.json("register is success");
+      res.json("Register is successful");
     }
   } catch (error) {
     console.log(error);
@@ -68,7 +72,6 @@ router.post("/login", async (req, res) => {
   const user_name = req.body.user_name;
   const password = req.body.password;
   const user = await User.find({ user_name });
-  console.log(user);
 
   if (user[0] != undefined) {
     if (user[0].password == password) {
@@ -244,5 +247,6 @@ router.delete("/unFriend/:nameYourSelf/:nameFriend", async (req, res) => {
     res.json(err);
   }
 });
+
 
 exports.router = router;
