@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext } from "react";
 import {
   Image,
   StyleSheet,
@@ -47,7 +47,7 @@ const RegisterScreen = ({ navigation }) => {
       quality: 1,
     });
 
-    setImage(result.assets[0].uri);
+    setImage(result.uri);
   };
 
   let state1 = useContext(ValidationContext).state;
@@ -71,27 +71,23 @@ const RegisterScreen = ({ navigation }) => {
         phone != ""
       ) {
         register({ user_name, name, password, phone, email, image });
-        ButtonAlert();
       } else {
         ButtonAlert2();
       }
     } else {
-      console.log("password not match");
+      ButtonAlert3();
     }
   };
 
-  const ButtonAlert = () =>
-    Alert.alert("Alert", "Register is successful", [
+  const ButtonAlert2 = () =>
+    Alert.alert("Alert", "Please complete the information.", [
       {
-        text: "Go back to login",
-        onPress: () => {
-          navigation.navigate("Login");
-        },
+        text: "OK",
       },
     ]);
 
-    const ButtonAlert2 = () =>
-    Alert.alert("Alert", "Please complete the information.", [
+  const ButtonAlert3 = () =>
+    Alert.alert("Alert", "Please enter correct information.", [
       {
         text: "OK",
       },
@@ -99,6 +95,7 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     // <View style={styles.screen}>
+
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.screen}
@@ -159,6 +156,24 @@ const RegisterScreen = ({ navigation }) => {
           <Text style={{ color: "red" }}>{state1.errorUsername}</Text>
         </Animatable.View>
       ) : null}
+      {state.Message == "Duplicate username" ? (
+        <Animatable.View
+          animation="fadeInLeft"
+          duration={500}
+          style={{ flexWrap: "nowrap" }}
+        >
+          <Text style={{ color: "red" }}>{state.Message}</Text>
+        </Animatable.View>
+      ) : null}
+      {state.Message == "Duplicate username and email" ? (
+        <Animatable.View
+          animation="fadeInLeft"
+          duration={500}
+          style={{ flexWrap: "nowrap" }}
+        >
+          <Text style={{ color: "red" }}>{state.Message}</Text>
+        </Animatable.View>
+      ) : null}
       <TextInput
         style={styles.txtInput}
         placeholder="Enter Password"
@@ -214,6 +229,24 @@ const RegisterScreen = ({ navigation }) => {
           <Text style={{ color: "red" }}>{state1.errorEmail}</Text>
         </Animatable.View>
       ) : null}
+      {state.Message == "Duplicate email" ? (
+        <Animatable.View
+          animation="fadeInLeft"
+          duration={500}
+          style={{ flexWrap: "nowrap" }}
+        >
+          <Text style={{ color: "red" }}>{state.Message}</Text>
+        </Animatable.View>
+      ) : null}
+      {state.Message == "Duplicate username and email" ? (
+        <Animatable.View
+          animation="fadeInLeft"
+          duration={500}
+          style={{ flexWrap: "nowrap" }}
+        >
+          <Text style={{ color: "red" }}>{state.Message}</Text>
+        </Animatable.View>
+      ) : null}
       <TextInput
         style={styles.txtInput}
         placeholder="Enter Phonenumber"
@@ -230,28 +263,31 @@ const RegisterScreen = ({ navigation }) => {
           <Text style={{ color: "red" }}>{state1.errorPhonenumber}</Text>
         </Animatable.View>
       ) : null}
+      {state.Message == "Register is successful" ? (
+        <Animatable.View
+          animation="fadeInLeft"
+          duration={500}
+          style={{ flexWrap: "nowrap" }}
+        >
+          <Text style={{ color: "green", marginTop: 20, fontSize: 24 }}>
+            {state.Message}
+          </Text>
+        </Animatable.View>
+      ) : null}
       <TouchableOpacity style={styles.btn} onPress={() => onSubmit_Register()}>
         <Text style={{ color: "#FFF8EF", fontWeight: "bold" }}>
           Create Account
         </Text>
       </TouchableOpacity>
-      {state.Message == "register is success" ? (
-        <Animatable.View
-          animation="fadeInLeft"
-          duration={500}
-          style={{ flexWrap: "nowrap" }}
-        >
-          <Text style={{ color: "green" }}>{state.Message}</Text>
-        </Animatable.View>
-      ) : (
-        <Animatable.View
-          animation="fadeInLeft"
-          duration={500}
-          style={{ flexWrap: "nowrap" }}
-        >
-          <Text style={{ color: "red" }}>{state.Message}</Text>
-        </Animatable.View>
-      )}
+
+      <TouchableOpacity
+        style={styles.btn2}
+        onPress={() => navigation.navigate("Login")}
+      >
+        <Text style={{ color: "#FFF8EF", fontWeight: "bold" }}>
+          Go back to login
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
     // </View>
   );
@@ -298,7 +334,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 5,
     marginBottom: 20,
-    marginTop: 25,
+    marginTop: 20,
+  },
+
+  btn2: {
+    backgroundColor: "#77CEC6",
+    paddingHorizontal: 50,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginBottom: 20,
   },
 });
 
