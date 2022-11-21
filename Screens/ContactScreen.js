@@ -96,6 +96,7 @@ const ContactScreen = () => {
       <FriendList
         name={itemData.item.name}
         status={itemData.item.status}
+        image={itemData.item.image}
         sentByYourSelf={itemData.item.sentByYourSelf}
         acceptFriendFunc={(prop) => accpetFriend(prop)}
         unFriendFunc={(prop) => unFriend(prop)}
