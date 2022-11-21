@@ -35,17 +35,15 @@ router.post("/signup", upload.single("images"), async (req, res) => {
 
   try {
     const user = await User.find({ user_name: user_name });
-    const e = await User.find({email : email})
+    const e = await User.find({ email: email });
 
     if (user.length != 0 && e.length != 0) {
       res.send("Duplicate username and email");
-    }
-    else if (e.length != 0) {
+    } else if (e.length != 0) {
       res.send("Duplicate email");
-    } else if(user.length != 0){
-      res.send("Duplicate username")
-    }
-     else {
+    } else if (user.length != 0) {
+      res.send("Duplicate username");
+    } else {
       if (req.file == undefined) {
         const user = new User({ user_name, password, name, email, phone });
         await user.save();
@@ -93,6 +91,8 @@ router.post("/sendFriendRequest/:name", async (req, res) => {
     const queryFriendData = await User.findOne({ name: sentTo });
     if (queryFriendData === null) {
       res.json("Name is not exists");
+    } else if (queryFriendData.name === queryMyData.name) {
+      res.json("Can't add friend yourself");
     } else {
       const findFriend = queryMyData.friends.find(
         ({ name }) => name === queryFriendData.name
@@ -105,6 +105,7 @@ router.post("/sendFriendRequest/:name", async (req, res) => {
               friends: {
                 _id: queryFriendData._id,
                 name: queryFriendData.name,
+                image: queryFriendData.image,
                 status: "Pending",
                 nameSender: queryMyData.name,
                 sentByYourSelf: true,
@@ -119,6 +120,7 @@ router.post("/sendFriendRequest/:name", async (req, res) => {
               friends: {
                 _id: queryMyData._id,
                 name: queryMyData.name,
+                image: queryMyData.image,
                 status: "Pending",
                 nameRecipient: queryFriendData.name,
                 sentByYourSelf: false,
@@ -207,38 +209,32 @@ router.delete("/unFriend/:nameYourSelf/:nameFriend", async (req, res) => {
   const nameYourSelf = req.params.nameYourSelf;
   const nameFriend = req.params.nameFriend;
   try {
-    const acceptFriend = await User.updateOne(
-      {
-        $and: [
-          { "friends.name": nameYourSelf },
-          { "friends.nameSender": nameFriend },
-        ],
-      },
+    const FindIdYourSelf = await User.findOne({ name: nameYourSelf });
+    console.log(FindIdYourSelf._id);
+    const FindIdFriend = await User.findOne({ name: nameFriend });
+    console.log(FindIdFriend._id);
+    const unFriend = await User.updateOne(
+      { "friends._id": FindIdFriend._id },
       {
         $pull: {
           friends: {
-            name: nameFriend,
+            _id: FindIdFriend._id,
           },
         },
       }
     );
 
-    const acceptFriendTo = await User.updateOne(
-      {
-        $and: [
-          { "friends.name": nameFriend },
-          { "friends.nameRecipient": nameYourSelf },
-        ],
-      },
+    const unFriendTo = await User.updateOne(
+      { "friends._id": FindIdYourSelf._id },
       {
         $pull: {
           friends: {
-            name: nameYourSelf,
+            _id: FindIdYourSelf._id,
           },
         },
       }
     );
-    if (acceptFriend) {
+    if (unFriend) {
       res.json({ unFriend: "unFriend Success :(" });
     } else {
       res.json({ unFriend: "unFriend Fail :p" });
@@ -247,6 +243,5 @@ router.delete("/unFriend/:nameYourSelf/:nameFriend", async (req, res) => {
     res.json(err);
   }
 });
-
 
 exports.router = router;
