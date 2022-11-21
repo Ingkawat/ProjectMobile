@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
+import Constants from "expo-constants";
 
 const FriendList = (props) => {
   const status = props.status;
+  const image = props.image;
   const sentByYourSelf = props.sentByYourSelf;
 
   const acceptFriend = () => {
@@ -23,15 +25,28 @@ const FriendList = (props) => {
             justifyContent: "center",
           }}
         >
-          <Image
+          {/* <Image
             source={require("../assets/userprofileicon.png")}
             style={styles.userProfile}
-          ></Image>
+          ></Image> */}
+          {image == null ? (
+            <Image
+              source={require("../assets/userprofileicon.png")}
+              style={styles.userProfile}
+            ></Image>
+          ) : (
+            <Image
+              source={{
+                uri: `http://${Constants.expoConfig.extra.apiUrl}:3000/${image}`,
+              }}
+              style={styles.userProfile2}
+            ></Image>
+          )}
           <Text
             style={{
               marginLeft: "5%",
               fontSize: 14,
-              marginTop: "2%",
+              marginTop: "5%",
               fontWeight: "bold",
             }}
           >
@@ -66,15 +81,24 @@ const FriendList = (props) => {
             justifyContent: "center",
           }}
         >
-          <Image
-            source={require("../assets/userprofileicon.png")}
-            style={styles.userProfile}
-          ></Image>
+          {image == null ? (
+            <Image
+              source={require("../assets/userprofileicon.png")}
+              style={styles.userProfile}
+            ></Image>
+          ) : (
+            <Image
+              source={{
+                uri: `http://${Constants.expoConfig.extra.apiUrl}:3000/${image}`,
+              }}
+              style={styles.userProfile2}
+            ></Image>
+          )}
           <Text
             style={{
               marginLeft: "5%",
               fontSize: 14,
-              marginTop: "2%",
+              marginTop: "5%",
               fontWeight: "bold",
             }}
           >
@@ -85,6 +109,7 @@ const FriendList = (props) => {
               styles.btn,
               { backgroundColor: "#F06B6D", marginLeft: "40%" },
             ]}
+            onPress={() => unFriend()}
           >
             <Text style={{ color: "#FFF8EF", fontWeight: "bold" }}>
               Unfriend
@@ -111,9 +136,15 @@ const styles = StyleSheet.create({
   },
 
   userProfile: {
-    width: 33,
-    height: 33,
+    width: 60,
+    height: 60,
     // marginLeft: "10%"
+  },
+
+  userProfile2: {
+    width: 60,
+    height: 60,
+    borderRadius: 100,
   },
 
   btn: {
