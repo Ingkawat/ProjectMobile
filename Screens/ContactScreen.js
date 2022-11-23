@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import Constants from "expo-constants";
 import { Context as AuthContext } from "../context/AuthContext";
@@ -21,12 +22,14 @@ const ContactScreen = () => {
   const [friendNameForAdd, setfriendNameForAdd] = useState("");
   const [friendNameForAccept, setfriendNameForAccept] = useState("");
   const [friendNameForUnFriend, setfriendNameForUnFriend] = useState("");
-  const [allFriend, setallFriend] = useState(null);
+  const [allFriend, setallFriend] = useState([]);
+  const [friendPending, setfriendPending] = useState([]);
+  const [friendPendingSender, setfriendPendingSender] = useState([]);
 
   useEffect(() => {
     axios
       .get(
-        `http://${Constants.expoConfig.extra.apiUrl}:3000/getFriend/${state.username}`
+        `http://${Constants.expoConfig.extra.apiUrl}:3000/getFriendPendingFirst/${state.username}`
       )
       .then(async (res) => {
         // console.log(res.data);
@@ -43,11 +46,53 @@ const ContactScreen = () => {
         const Friend = res.data.friends;
         setNameUser(res.data.name);
         setallFriend(Friend);
+        // setfriendPendingSender(
+        //   Friend.filter(
+        //     ({ status, sentByYourSelf }) =>
+        //       status === "Pending" && sentByYourSelf === true
+        //   )
+        // );
+        // console.log({ friendPendingSender: friendPendingSender });
       })
       .catch((err) => {
         console.log(err);
       });
   });
+
+  useEffect(() => {
+    axios
+      .post(
+        `http://${Constants.expoConfig.extra.apiUrl}:3000/user/${state.username}`
+      )
+      .then(async (res) => {
+        const Friend = res.data.friends;
+        setfriendPending(
+          Friend.filter(
+            ({ status, sentByYourSelf }) =>
+              status === "Pending" && sentByYourSelf === false
+          )
+        );
+        console.log({ friendPending });
+        if (friendPending.length > 0) {
+          Alert.alert("Alert", "Have friend request to you", [{ text: "OK" }]);
+        }
+        setfriendPendingSender(
+          Friend.filter(
+            ({ status, sentByYourSelf }) =>
+              status === "Pending" && sentByYourSelf === true
+          )
+        );
+        console.log({ friendPendingSender });
+        if (friendPendingSender.length > 0) {
+          Alert.alert("Alert", "Have friend request to someone", [
+            { text: "OK" },
+          ]);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const AddFriend = () => {
     axios
@@ -57,6 +102,18 @@ const ContactScreen = () => {
       )
       .then(async (res) => {
         console.log(res.data);
+        setfriendNameForAdd("");
+        if (res.data === "Name is not exists") {
+          Alert.alert("Alert", "Can't add friend yourself", [{ text: "OK" }]);
+        } else if (res.data === "Can't add friend yourself") {
+          Alert.alert("Alert", "Name is not exists", [{ text: "OK" }]);
+        } else if (res.data === "You already sent friend request") {
+          Alert.alert("Alert", "You already sent friend request", [
+            { text: "OK" },
+          ]);
+        } else {
+          Alert.alert("Alert", "Send friend request success", [{ text: "OK" }]);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -65,6 +122,10 @@ const ContactScreen = () => {
 
   const accpetFriend = (prop) => {
     setfriendNameForAccept(prop);
+    console.log(
+      { nameUser: nameUser },
+      { friendNameForAccept: friendNameForAccept }
+    );
     axios
       .post(
         `http://${Constants.expoConfig.extra.apiUrl}:3000/acceptFriendRequest/${nameUser}/${friendNameForAccept}`
@@ -79,6 +140,10 @@ const ContactScreen = () => {
 
   const unFriend = (prop) => {
     setfriendNameForUnFriend(prop);
+    console.log(
+      { nameUser: nameUser },
+      { friendNameForUnFriend: friendNameForUnFriend }
+    );
     axios
       .delete(
         `http://${Constants.expoConfig.extra.apiUrl}:3000/unFriend/${nameUser}/${friendNameForUnFriend}`
@@ -98,8 +163,8 @@ const ContactScreen = () => {
         status={itemData.item.status}
         image={itemData.item.image}
         sentByYourSelf={itemData.item.sentByYourSelf}
-        acceptFriendFunc={(prop) => accpetFriend(prop)}
-        unFriendFunc={(prop) => unFriend(prop)}
+        acceptFriendFunc={(value) => accpetFriend(value)}
+        unFriendFunc={(value) => unFriend(value)}
       />
     );
   };
